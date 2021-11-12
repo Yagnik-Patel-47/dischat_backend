@@ -11,19 +11,6 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 dotenv.config();
-// (async () => {
-//   const server = new ApolloServer({
-//     typeDefs,
-//     resolvers,
-//   });
-//   await mongoose
-//     .connect(process.env.MONGO_CONNECTION_URI)
-//     .then(() => console.log("db connected"))
-//     .catch(console.log);
-
-//   const { url } = await server.listen();
-//   console.log(`🚀 Server ready at ${url}`);
-// })();
 const pubsub = new PubSub();
 
 (async function () {
@@ -61,9 +48,7 @@ const pubsub = new PubSub();
   server.applyMiddleware({ app });
 
   const PORT = 4000 || process.env.PORT;
-  httpServer.listen(PORT, () =>
-    console.log(`Server is now running on http://localhost:${PORT}/graphql`)
-  );
+  httpServer.listen(PORT);
 })();
 
 export { pubsub };

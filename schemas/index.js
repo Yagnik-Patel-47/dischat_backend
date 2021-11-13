@@ -5,6 +5,7 @@ const typeDefs = gql`
     message: String!
     timestamp: String!
     sender: String!
+    chatId: ID!
   }
 
   type Chat {
@@ -35,6 +36,7 @@ const typeDefs = gql`
     getUserByID(Id: ID!): UserRes
     findUserByUsername(username: String!): UserRes
     getChat(id: ID!): Chat
+    getAllChats: [Chat]!
   }
 
   input UserInput {
@@ -51,14 +53,26 @@ const typeDefs = gql`
       timestamp: String!
       sender: String!
       chatId: ID!
-    ): [Message!]!
+    ): Message!
     deleteMessage(chatId: ID!, index: Int!): Boolean!
     addNewUserToChat(chatId: ID!, user: UserInput!): Boolean!
+    leaveChat(userId: ID!, chatId: ID!): Boolean!
+  }
+
+  type DeleteMessageRes {
+    message: Message!
+    index: Int!
+  }
+
+  type newChatRes {
+    userId: ID!
+    chatId: ID!
   }
 
   type Subscription {
-    newMessage: Message!
-    deleteMessage: [Message]!
+    newMessage(chatId: ID!): Message!
+    deleteMessage(chatId: ID!): DeleteMessageRes
+    newChat(userId: ID!): newChatRes
   }
 `;
 

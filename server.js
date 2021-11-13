@@ -1,5 +1,7 @@
-import { createServer } from "http";
 import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { createServer } from "http";
 import { ApolloServer } from "apollo-server-express";
 import { execute, subscribe } from "graphql";
 import { SubscriptionServer } from "subscriptions-transport-ws";
@@ -7,8 +9,6 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { PubSub } from "graphql-subscriptions";
 import resolvers from "./resolvers/index.js";
 import typeDefs from "./schemas/index.js";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
 
 dotenv.config();
 const pubsub = new PubSub();

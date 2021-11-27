@@ -6,12 +6,24 @@ import { ApolloServer } from "apollo-server-express";
 import { execute, subscribe } from "graphql";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { PubSub } from "graphql-subscriptions";
 import resolvers from "./resolvers/index.js";
 import typeDefs from "./schemas/index.js";
+import Redis from "ioredis";
+import { RedisPubSub } from "graphql-redis-subscriptions";
 
 dotenv.config();
-const pubsub = new PubSub();
+const { MONGO_CONNECTION_URI, REDIS_URL, REDIS_PORT, REDIS_PASSWORD } =
+  process.env;
+
+const redisOptions = {
+  host: REDIS_URL,
+  port: REDIS_PORT,
+  password: REDIS_PASSWORD,
+};
+export const pubsub = new RedisPubSub({
+  publisher: new Redis(redisOptions),
+  subscriber: new Redis(redisOptions),
+});
 
 (async function () {
   const app = express();
@@ -40,7 +52,7 @@ const pubsub = new PubSub();
   );
 
   await mongoose
-    .connect(process.env.MONGO_CONNECTION_URI)
+    .connect(MONGO_CONNECTION_URI)
     .then(() => console.log("db connected"))
     .catch(console.log);
 
@@ -50,5 +62,3 @@ const pubsub = new PubSub();
   const PORT = process.env.PORT || 4000;
   httpServer.listen(PORT);
 })();
-
-export { pubsub };
